@@ -60,32 +60,28 @@
             margin-top: 6px;
         }
 
-        .header-note {
-            font-size: 12px;
-            font-weight: 300;
-            font-style: italic;
-            text-align: right;
-            line-height: 1.5;
-        }
-
         /* Menu Content: 2x2 grid of sections */
         #menu-container {
             flex: 1;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto auto;
+            align-content: center;
+            row-gap: 40px;
             column-gap: 48px;
-            row-gap: 24px;
             padding: 24px 0;
         }
 
         .menu-section {
             padding-bottom: 14px;
-            border-bottom: 1px solid #000000;
         }
 
-        .menu-section:last-of-type {
+        /* Longdrinks spans the whole bottom row, boxed by rules */
+        #menu-container .menu-section:last-of-type {
+            grid-column: 1 / -1;
+            border-top: 1px solid #000000;
             border-bottom: 2px solid #000000;
+            padding-top: 14px;
         }
 
         h2 {
@@ -217,9 +213,6 @@
                 <h1>eastend</h1>
                 <div class="subtitle">GETRÄNKEKARTE</div>
             </div>
-            <div class="header-note">
-                Keine Getränke mehr ab 0:45
-            </div>
         </header>
 
         <!-- DYNAMIC MENU SECTIONS (Populated via fetch from ../menu.json) -->
@@ -228,7 +221,7 @@
         <!-- FOOTER & QR CODE -->
         <footer>
             <div class="footer-text">
-                Nur Barzahlung &middot; Bitte Flaschen und Gläser zurückbringen
+                Nur Barzahlung &middot; Bitte Flaschen und Gläser zurückbringen &middot; Keine Getränke mehr ab 0:45
             </div>
 
             <div class="qr-box">
