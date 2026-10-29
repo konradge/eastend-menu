@@ -2,29 +2,27 @@
 """
 Screenshot script for the eastend drink menu.
 
-Captures the menu page with headless Chrome as PNG:
-  - menu-16x9.png        16:9 (1920x1080)  -> for TV / screen display
-  - menu-a4-landscape.png  A4 landscape, ~200 DPI -> for printing
+Captures the menu pages with headless Chrome as PNG (all full-bleed,
+no grey border):
+  - menu-16x9.png           16:9 (1920x1080)     -> horizontal card, for TV
+  - menu-a4-landscape.png   A4 landscape, ~200dpi -> horizontal card, for print
+  - menu-a4-portrait.png    A4 portrait,  ~200dpi -> vertical card, for print
 
 Usage:
-  python3 screenshot.py                     # both shots, horizontal card
-  python3 screenshot.py --page vertical     # use the vertical card instead
-  python3 screenshot.py --url http://...    # take a remote page instead of
-                                            # starting a local server
+  python3 screenshot.py                    # all three shots from local files
+  python3 screenshot.py --url http://...   # capture a remote deployment instead
 """
 
 import argparse
 import http.server
 import os
 import shutil
-import socket
 import subprocess
 import sys
-import tempfile
 import threading
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PAGES = {"vertical": "/", "horizontal": "/horizontal/"}
+PAGES = {"horizontal": "/horizontal/", "vertical": "/"}
 
 
 def find_chrome() -> str:
@@ -38,9 +36,10 @@ def find_chrome() -> str:
 def start_local_server(directory: str) -> str:
     """Serve `directory` on a random free port in a background thread.
 
-    Needed because the page fetches menu.json / qrcode.svg, which does not
+    Needed because the pages fetch menu.json / qrcode.svg, which does not
     work over file:// URLs.
     """
+
     class QuietHandler(http.server.SimpleHTTPRequestHandler):
         def __init__(self, *a, **kw):
             super().__init__(*a, directory=directory, **kw)
@@ -75,9 +74,9 @@ def shoot(chrome: str, url: str, width: int, height: int, scale: int, out: str) 
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--page", choices=PAGES, default="horizontal",
-                        help="which card to capture (default: horizontal)")
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--url", help="capture this URL instead of starting a local server")
     parser.add_argument("--output-dir", default=BASE_DIR,
                         help="where to write the PNG files (default: script directory)")
@@ -88,20 +87,22 @@ def main() -> None:
 
     if args.url:
         base_url = args.url.rstrip("/")
-        page_url = base_url + PAGES[args.page]
-        print(f"capturing {page_url}")
     else:
-        base = start_local_server(BASE_DIR)
-        page_url = base + PAGES[args.page]
-        print(f"capturing {page_url}")
+        base_url = start_local_server(BASE_DIR)
+    print(f"capturing from {base_url}")
 
-    suffix = f"-{args.page}" if args.page != "horizontal" else ""
+    # ?shot switches the page into full-bleed mode (no border / grey frame)
+    h_page = f"{base_url}{PAGES['horizontal']}?shot"
+    v_page = f"{base_url}{PAGES['vertical']}?shot"
 
-    # 16:9 (1920x1080) -> for screen display, 1x scale is already plenty
-    shoot(chrome, page_url, 1920, 1080, 1, os.path.join(args.output_dir, f"menu-16x9{suffix}.png"))
+    # 16:9 (1920x1080) -> horizontal card for screen display
+    shoot(chrome, h_page, 1920, 1080, 1, os.path.join(args.output_dir, "menu-16x9.png"))
 
     # A4 landscape: 1123x794 CSS px at 96 dpi; 2x scale => 2246x1588 px (~200 dpi)
-    shoot(chrome, page_url, 1123, 794, 2, os.path.join(args.output_dir, f"menu-a4-landscape{suffix}.png"))
+    shoot(chrome, h_page, 1123, 794, 2, os.path.join(args.output_dir, "menu-a4-landscape.png"))
+
+    # A4 portrait: 794x1123 CSS px at 96 dpi; 2x scale => 1588x2246 px (~200 dpi)
+    shoot(chrome, v_page, 794, 1123, 2, os.path.join(args.output_dir, "menu-a4-portrait.png"))
 
 
 if __name__ == "__main__":

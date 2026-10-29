@@ -167,6 +167,20 @@
             font-style: italic;
         }
 
+        /* Full-bleed mode for automated screenshots (?shot): no frame,
+           card fills the entire viewport */
+        body.shot {
+            padding: 0;
+        }
+
+        body.shot .card {
+            width: 100%;
+            max-width: none;
+            height: 100vh;
+            border: none;
+            margin: 0;
+        }
+
         /* Print Optimization */
         @media print {
             @page {
@@ -655,6 +669,9 @@
 
     <!-- FETCHING DATA FROM menu.json -->
     <script>
+        // ?shot => full-bleed layout for automated screenshots
+        if (location.search.includes('shot')) document.body.classList.add('shot');
+
         // Render menu content dynamically into DOM
         function renderMenu(data) {
             const container = document.getElementById('menu-container');
