@@ -76,11 +76,10 @@
             padding-bottom: 14px;
         }
 
-        /* Longdrinks spans the whole bottom row, boxed by rules */
+        /* Longdrinks spans the whole bottom row, separated by a thin rule */
         #menu-container .menu-section:last-of-type {
             grid-column: 1 / -1;
             border-top: 1px solid #000000;
-            border-bottom: 2px solid #000000;
             padding-top: 14px;
         }
 
@@ -133,9 +132,11 @@
             margin-bottom: 10px;
         }
 
-        /* Footer & QR Code Area */
+        /* Footer & QR Code Area: bold rule at the very bottom */
         footer {
             margin-top: 16px;
+            padding-top: 14px;
+            border-top: 2px solid #000000;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -159,10 +160,10 @@
         }
 
         .qr-code {
-            width: 60px;
-            height: 60px;
+            width: 96px;
+            height: 96px;
             border: 1px solid #000000;
-            padding: 4px;
+            padding: 5px;
         }
 
         .qr-label {
