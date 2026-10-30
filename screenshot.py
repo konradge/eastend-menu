@@ -4,18 +4,21 @@ Screenshot script for the eastend drink menu.
 
 Captures the menu pages with headless Chrome as PNG (all full-bleed,
 no grey border):
-  - menu-16x9.png           16:9 (1920x1080)     -> horizontal card, for TV
-  - menu-a4-landscape.png   A4 landscape, ~200dpi -> horizontal card, for print
-  - menu-a4-portrait.png    A4 portrait,  ~200dpi -> vertical card, for print
+  - menu-landscape.png   tight landscape (~200 dpi) -> horizontal card, for print
+  - menu-a4-portrait.png A4 portrait, ~200 dpi      -> vertical card, for print
+
+The landscape height is measured from the page itself, so the card is
+only as tall as its content (no A4-style dead space).
 
 Usage:
-  python3 screenshot.py                    # all three shots from local files
+  python3 screenshot.py                    # both shots from local files
   python3 screenshot.py --url http://...   # capture a remote deployment instead
 """
 
 import argparse
 import http.server
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -23,6 +26,7 @@ import threading
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PAGES = {"horizontal": "/horizontal/", "vertical": "/"}
+LANDSCAPE_WIDTH = 1123  # CSS px (~A4 landscape width at 96 dpi)
 
 
 def find_chrome() -> str:
@@ -52,6 +56,28 @@ def start_local_server(directory: str) -> str:
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     return f"http://127.0.0.1:{port}"
+
+
+def measure_card_height(chrome: str, url: str, width: int) -> int:
+    """Render the page at `width` and report the card's content height.
+
+    The page reports it via <title>SHOTHEIGHT=<n></title> in ?shot mode.
+    """
+    cmd = [
+        chrome,
+        "--headless",
+        "--no-sandbox",
+        "--disable-gpu",
+        f"--window-size={width},400",
+        "--dump-dom",
+        "--virtual-time-budget=3000",
+        url,
+    ]
+    dom = subprocess.run(cmd, capture_output=True, text=True).stdout
+    match = re.search(r"SHOTHEIGHT=(\d+)", dom)
+    if not match:
+        sys.exit(f"error: could not measure card height from {url}")
+    return int(match.group(1))
 
 
 def shoot(chrome: str, url: str, width: int, height: int, scale: int, out: str) -> None:
@@ -95,14 +121,14 @@ def main() -> None:
     h_page = f"{base_url}{PAGES['horizontal']}?shot"
     v_page = f"{base_url}{PAGES['vertical']}?shot"
 
-    # 16:9 (1920x1080) -> horizontal card for screen display
-    shoot(chrome, h_page, 1920, 1080, 1, os.path.join(args.output_dir, "menu-16x9.png"))
-
-    # A4 landscape: 1123x794 CSS px at 96 dpi; 2x scale => 2246x1588 px (~200 dpi)
-    shoot(chrome, h_page, 1123, 794, 2, os.path.join(args.output_dir, "menu-a4-landscape.png"))
+    # Tight landscape: measure the actual content height, 2x scale => ~200 dpi
+    height = measure_card_height(chrome, h_page, LANDSCAPE_WIDTH)
+    shoot(chrome, h_page, LANDSCAPE_WIDTH, height, 2,
+          os.path.join(args.output_dir, "menu-landscape.png"))
 
     # A4 portrait: 794x1123 CSS px at 96 dpi; 2x scale => 1588x2246 px (~200 dpi)
-    shoot(chrome, v_page, 794, 1123, 2, os.path.join(args.output_dir, "menu-a4-portrait.png"))
+    shoot(chrome, v_page, 794, 1123, 2,
+          os.path.join(args.output_dir, "menu-a4-portrait.png"))
 
 
 if __name__ == "__main__":

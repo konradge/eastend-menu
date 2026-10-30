@@ -151,12 +151,17 @@
             line-height: 1.5;
         }
 
+        /* QR code is only shown in the screenshot (?shot) version */
         .qr-box {
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: center;
             text-align: center;
             flex-shrink: 0;
+        }
+
+        body.shot .qr-box {
+            display: flex;
         }
 
         .qr-code {
@@ -170,6 +175,8 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-top: 4px;
+            max-width: 130px;
+            line-height: 1.4;
         }
 
         /* Error state formatting */
@@ -185,12 +192,13 @@
         body.shot {
             padding: 0;
             background: #ffffff;
+            display: block;
         }
 
         body.shot .card {
             width: 100%;
             max-width: none;
-            height: 100vh;
+            min-height: 100vh;
             aspect-ratio: auto;
             border: none;
             margin: 0;
@@ -241,7 +249,7 @@
 
             <div class="qr-box">
                 <svg class="qr-code" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37 37" role="img" aria-label="QR-Code: https://konradge.github.io/eastend-menu/"></svg>
-                <span class="qr-label">SCAN ME FOR ONLINE MENU</span>
+                <span class="qr-label">Vollst&auml;ndige Getr&auml;nkekarte mit allen Details und Specials</span>
             </div>
         </footer>
     </div>
@@ -249,7 +257,14 @@
     <!-- FETCHING DATA FROM menu.json (one level up from /horizontal/) -->
     <script>
         // ?shot => full-bleed layout for automated screenshots
-        if (location.search.includes('shot')) document.body.classList.add('shot');
+        if (location.search.includes('shot')) {
+            document.body.classList.add('shot');
+            // report the card's height for the screenshot script
+            new ResizeObserver(() => {
+                document.title = 'SHOTHEIGHT=' +
+                    Math.ceil(document.querySelector('.card').getBoundingClientRect().height);
+            }).observe(document.querySelector('.card'));
+        }
 
         // Render menu content dynamically into DOM
         function renderMenu(data) {

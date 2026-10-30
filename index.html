@@ -137,11 +137,16 @@
         }
 
         .qr-box {
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: center;
             text-align: center;
             flex-shrink: 0;
+        }
+
+        /* QR code is only shown in the screenshot (?shot) version */
+        body.shot .qr-box {
+            display: flex;
         }
 
         .qr-code {
@@ -157,6 +162,8 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-top: 4px;
+            max-width: 110px;
+            line-height: 1.4;
         }
 
         /* Error state formatting */
@@ -171,12 +178,13 @@
            card fills the entire viewport */
         body.shot {
             padding: 0;
+            display: block;
         }
 
         body.shot .card {
             width: 100%;
             max-width: none;
-            height: 100vh;
+            min-height: 100vh;
             border: none;
             margin: 0;
         }
@@ -662,7 +670,7 @@
 		</g>
 	</g>
                 </svg>
-                <span class="qr-label">SCAN ME FOR ONLINE MENU</span>
+                <span class="qr-label">Vollst&auml;ndige Getr&auml;nkekarte mit allen Details und Specials</span>
             </div>
         </footer>
     </div>
@@ -670,7 +678,14 @@
     <!-- FETCHING DATA FROM menu.json -->
     <script>
         // ?shot => full-bleed layout for automated screenshots
-        if (location.search.includes('shot')) document.body.classList.add('shot');
+        if (location.search.includes('shot')) {
+            document.body.classList.add('shot');
+            // report the card's height for the screenshot script
+            new ResizeObserver(() => {
+                document.title = 'SHOTHEIGHT=' +
+                    Math.ceil(document.querySelector('.card').getBoundingClientRect().height);
+            }).observe(document.querySelector('.card'));
+        }
 
         // Render menu content dynamically into DOM
         function renderMenu(data) {
