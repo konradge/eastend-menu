@@ -1,0 +1,51 @@
+[
+  {
+    "category": "BIER",
+    "items": [
+      { "name": "Brinkhoff's No. 1", "price": "1,00 €" },
+      { "name": "Dortmunder Kronen", "price": "1,00 €" },
+      { "name": "Astra Rakete", "price": "1,00 €" },
+      { "name": "Brinkhoff's Alkoholfrei", "price": "1,00 €" },
+      { "name": "Brinkhoff's Radler", "price": "1,00 €" }
+    ]
+  },
+  {
+    "category": "SOFTDRINKS",
+    "items": [
+      {
+        "name": "Fassbrause",
+        "sub": "verschiedene Sorten",
+        "price": "1,00 €"
+      },
+      { "name": "Spezi", "sub": "mit/ohne Zucker", "price": "1,00 €" },
+      {
+        "name": "Mio Mio",
+        "sub": "verschiedene Sorten",
+        "price": "1,50 €"
+      }
+    ]
+  },
+  {
+    "category": "SHOTS",
+    "items": [
+      {
+        "name": "Vodka · Rum · Whiskey · Tequila · Gin · Jägermeister · Berliner Luft",
+        "price": "1,00 €"
+      },
+      { "name": "Teeschnaps", "price": "0,50 €" },
+      {
+        "name": "Berentzen",
+        "sub": "Rot / Grün",
+        "price": "0,50 €"
+      }
+    ]
+  },
+  {
+    "category": "LONGDRINKS",
+    "description": "Mische jeden Softdrink mit einer Spirituose deiner Wahl",
+    "items": [
+      { "name": "Longdrink 0,2 l", "price": "2,00 €" },
+      { "name": "Longdrink 0,3 l", "price": "3,00 €" }
+    ]
+  }
+]
