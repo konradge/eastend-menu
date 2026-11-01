@@ -1,11 +1,26 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eastend - Getränkekarte (Querformat)</title>
+    <title>eastend - Drink Menu (Landscape)</title>
     <style>
-        /* Base styles - Strict Black and White, A4 landscape */
+        /* ── TV theme (screenshot / projection) ──────────────────────────
+           Change these values to retheme; everything below references them.
+             --bg     page & card background
+             --fg     primary text  (titles, item names, prices)
+             --muted  secondary text (subtitle, subs, footer, QR label)
+             --line   rules & borders
+             --dot    dotted price leader lines                        */
+        :root {
+            --bg: #3a3a3a;
+            --fg: #f2f2f2;
+            --muted: #c8c8c8;
+            --line: #d8d8d8;
+            --dot: #9a9a9a;
+        }
+
+        /* Base styles */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -14,8 +29,8 @@
 
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background-color: #eeeeee;
-            color: #000000;
+            background-color: var(--bg);
+            color: var(--fg);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -25,12 +40,12 @@
 
         /* Printable Card Sheet: A4 landscape ratio */
         .card {
-            background-color: #ffffff;
+            background-color: var(--bg);
             width: 100%;
             max-width: 1100px;
             aspect-ratio: 297 / 210;
-            border: 2px solid #000000;
-            padding: 34px 44px;
+            border: 2px solid var(--line);
+            padding: 24px 44px;
             margin: auto;
             display: flex;
             flex-direction: column;
@@ -41,65 +56,64 @@
             display: flex;
             align-items: flex-end;
             justify-content: space-between;
-            padding-bottom: 16px;
-            border-bottom: 2px solid #000000;
+            padding-bottom: 14px;
+            border-bottom: 2px solid var(--line);
         }
 
         h1 {
-            font-size: 34px;
+            font-size: 44px;
             font-weight: 900;
             letter-spacing: 3px;
             line-height: 1.1;
         }
 
         .subtitle {
-            font-size: 13px;
+            font-size: 15px;
             font-weight: 700;
             letter-spacing: 4px;
             text-transform: uppercase;
-            margin-top: 6px;
+            margin-top: 8px;
+            color: var(--muted);
         }
 
-        /* Menu Content: 2x2 grid of sections */
+        /* Menu Content: single row of the four sections */
         #menu-container {
             flex: 1;
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            grid-template-rows: auto auto;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
             align-content: center;
-            row-gap: 40px;
             column-gap: 48px;
-            padding: 24px 0;
+            padding: 18px 0;
         }
 
         .menu-section {
             padding-bottom: 14px;
         }
 
-        /* Longdrinks spans the whole bottom row, separated by a thin rule */
-        #menu-container .menu-section:last-of-type {
-            grid-column: 1 / -1;
-            border-top: 1px solid #000000;
-            padding-top: 14px;
-        }
-
         h2 {
-            font-size: 15px;
+            font-size: 17px;
             font-weight: 800;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .item-row {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .item-row:last-child {
             margin-bottom: 0;
+        }
+
+        .item-dots {
+            flex: 1;
+            border-bottom: 2px dotted var(--dot);
+            margin: 0 10px;
+            transform: translateY(-4px);
         }
 
         .item-details {
@@ -108,19 +122,20 @@
         }
 
         .item-name {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
         }
 
         .item-sub {
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 400;
             margin-top: 2px;
+            color: var(--muted);
         }
 
         /* Prices: Thin & Cursive */
         .item-price {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 300;
             font-style: italic;
             white-space: nowrap;
@@ -128,15 +143,16 @@
         }
 
         .section-desc {
-            font-size: 11px;
+            font-size: 12px;
             margin-bottom: 10px;
+            color: var(--muted);
         }
 
         /* Footer & QR Code Area: bold rule at the very bottom */
         footer {
-            margin-top: 16px;
-            padding-top: 14px;
-            border-top: 2px solid #000000;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 2px solid var(--line);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -145,10 +161,11 @@
 
         /* Footer Text: Thin & Cursive */
         .footer-text {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 300;
             font-style: italic;
             line-height: 1.5;
+            color: var(--muted);
         }
 
         /* QR code is only shown in the screenshot (?shot) version */
@@ -165,8 +182,8 @@
         }
 
         .qr-code {
-            width: 108px;
-            height: 108px;
+            width: 92px;
+            height: 92px;
         }
 
         .qr-label {
@@ -177,6 +194,7 @@
             margin-top: 4px;
             max-width: 130px;
             line-height: 1.4;
+            color: var(--muted);
         }
 
         /* Error state formatting */
@@ -191,7 +209,7 @@
            background, no border, card fills the entire viewport */
         body.shot {
             padding: 0;
-            background: #ffffff;
+            background: var(--bg);
             display: block;
         }
 
@@ -213,14 +231,14 @@
 
             body {
                 padding: 0;
-                background: #ffffff;
+                background: var(--bg);
             }
 
             .card {
                 max-width: none;
                 width: auto;
                 aspect-ratio: auto;
-                border: 2px solid #000000;
+                border: 2px solid var(--line);
                 padding: 24px 36px;
                 page-break-inside: avoid;
             }
@@ -234,8 +252,9 @@
         <header>
             <div>
                 <h1>eastend</h1>
-                <div class="subtitle">GETRÄNKEKARTE</div>
+                <div class="subtitle">DRINK MENU</div>
             </div>
+            <img class="wolf" src="../assets/wolf-web.png" alt="Wolf" style="height: 96px; width: auto;">
         </header>
 
         <!-- DYNAMIC MENU SECTIONS (Populated via fetch from ../menu.json) -->
@@ -244,12 +263,12 @@
         <!-- FOOTER & QR CODE -->
         <footer>
             <div class="footer-text">
-                Nur Barzahlung &middot; Bitte Flaschen und Gläser zurückbringen &middot; Keine Getränke mehr ab 0:45
+                Cash only &middot; Please bring back bottles and glasses &middot; No more drinks after 0:45
             </div>
 
             <div class="qr-box">
                 <svg class="qr-code" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 37 37" role="img" aria-label="QR-Code: https://konradge.github.io/eastend-menu/"></svg>
-                <span class="qr-label">Vollst&auml;ndige Getr&auml;nkekarte mit allen Details und Specials</span>
+                <span class="qr-label">Complete drink menu with all details and specials</span>
             </div>
         </footer>
     </div>
@@ -288,6 +307,7 @@
                                 <span class="item-name">${item.name}</span>
                                 ${item.sub ? `<span class="item-sub">${item.sub}</span>` : ''}
                             </div>
+                            <span class="item-dots"></span>
                             <span class="item-price">${item.price}</span>
                         </div>
                     `;
@@ -320,7 +340,7 @@
                 console.error('Failed to load menu.json:', error);
                 document.getElementById('menu-container').innerHTML = `
                     <div class="error-message">
-                        Getränkekarte konnte nicht geladen werden. Bitte prüfen Sie, ob "menu.json" im übergeordneten Ordner liegt.
+                        Could not load the drink menu. Please check that "menu.json" is in the parent folder.
                     </div>
                 `;
             }

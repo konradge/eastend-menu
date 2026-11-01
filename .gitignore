@@ -1,2 +1,5 @@
-# Generated screenshots
-*.png
+# Generated screenshots (root of the repo only)
+/menu-landscape.png
+/menu-landscape.jpg
+/menu-a4-portrait.png
+/menu-a4-portrait.jpg

@@ -1,11 +1,11 @@
 [
   {
-    "category": "BIER",
+    "category": "BEER",
     "items": [
       { "name": "Brinkhoff's No. 1", "price": "1,00 €" },
       { "name": "Dortmunder Kronen", "price": "1,00 €" },
       { "name": "Astra Rakete", "price": "1,00 €" },
-      { "name": "Brinkhoff's Alkoholfrei", "price": "1,00 €" },
+      { "name": "Brinkhoff's 0,0 %", "price": "1,00 €" },
       { "name": "Brinkhoff's Radler", "price": "1,00 €" }
     ]
   },
@@ -14,13 +14,19 @@
     "items": [
       {
         "name": "Fassbrause",
-        "sub": "verschiedene Sorten",
+        "sub": "various flavours",
         "price": "1,00 €"
       },
-      { "name": "Spezi", "sub": "mit/ohne Zucker", "price": "1,00 €" },
+      { "name": "Spezi", "sub": "with/without sugar", "price": "1,00 €" },
+      {
+        "name": "Cola · Fanta · Sprite",
+        "sub": "with/without sugar",
+        "price": "1,00 €"
+      },
+      { "name": "Red Bull", "price": "2,00 €" },
       {
         "name": "Mio Mio",
-        "sub": "verschiedene Sorten",
+        "sub": "various flavours",
         "price": "1,50 €"
       }
     ]
@@ -35,17 +41,17 @@
       { "name": "Teeschnaps", "price": "0,50 €" },
       {
         "name": "Berentzen",
-        "sub": "Rot / Grün",
+        "sub": "Red / Green",
         "price": "0,50 €"
       }
     ]
   },
   {
     "category": "LONGDRINKS",
-    "description": "Mische jeden Softdrink mit einer Spirituose deiner Wahl",
+    "description": "Mix any soft drink with a spirit of your choice",
     "items": [
-      { "name": "Longdrink 0,2 l", "price": "2,00 €" },
-      { "name": "Longdrink 0,3 l", "price": "3,00 €" }
+      { "name": "Long Drink 0,2 l", "price": "2,00 €" },
+      { "name": "Long Drink 0,3 l", "price": "3,00 €" }
     ]
   }
 ]

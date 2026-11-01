@@ -1,11 +1,26 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eastend - Getränkekarte</title>
+    <title>eastend - Drink Menu</title>
     <style>
-        /* Base styles - Strict Black and White */
+        /* ── Theme ────────────────────────────────────────────────────────
+           Change these values to retheme; everything below references them.
+             --bg     page & card background
+             --fg     primary text  (titles, item names, prices)
+             --muted  secondary text (subtitle, subs, footer, QR label)
+             --line   rules & borders
+             --dot    dotted price leader lines                        */
+        :root {
+            --bg: #3a3a3a;
+            --fg: #f2f2f2;
+            --muted: #c8c8c8;
+            --line: #d8d8d8;
+            --dot: #9a9a9a;
+        }
+
+        /* Base styles */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -14,8 +29,8 @@
 
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background-color: #ffffff;
-            color: #000000;
+            background-color: var(--bg);
+            color: var(--fg);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -25,34 +40,44 @@
 
         /* Printable Card Sheet */
         .card {
-            background-color: #ffffff;
+            background-color: var(--bg);
             width: 100%;
             max-width: 650px;
-            border: 2px solid #000000;
-            padding: 40px;
+            border: 2px solid var(--line);
+            padding: 32px 40px;
             margin: auto;
         }
 
         /* Header */
         header {
             text-align: center;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #000000;
+            padding-bottom: 14px;
+            border-bottom: 2px solid var(--line);
+        }
+
+        .wolf {
+            width: 84px;
+            height: auto;
+            margin-bottom: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         h1 {
-            font-size: 32px;
+            font-size: 42px;
             font-weight: 900;
             letter-spacing: 3px;
             line-height: 1.1;
         }
 
         .subtitle {
-            font-size: 13px;
+            font-size: 15px;
             font-weight: 700;
             letter-spacing: 4px;
             text-transform: uppercase;
-            margin-top: 6px;
+            margin-top: 8px;
+            color: var(--muted);
         }
 
         /* Menu Content Area */
@@ -61,32 +86,39 @@
         }
 
         .menu-section {
-            margin-top: 24px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #000000;
+            margin-top: 14px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--line);
         }
 
         .menu-section:last-of-type {
-            border-bottom: 2px solid #000000;
+            border-bottom: 2px solid var(--line);
         }
 
         h2 {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 800;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         .item-row {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
 
         .item-row:last-child {
             margin-bottom: 0;
+        }
+
+        .item-dots {
+            flex: 1;
+            border-bottom: 2px dotted var(--dot);
+            margin: 0 10px;
+            transform: translateY(-4px);
         }
 
         .item-details {
@@ -95,19 +127,20 @@
         }
 
         .item-name {
-            font-size: 15px;
+            font-size: 17px;
             font-weight: 600;
         }
 
         .item-sub {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 400;
             margin-top: 2px;
+            color: var(--muted);
         }
 
         /* Prices: Thin & Cursive */
         .item-price {
-            font-size: 15px;
+            font-size: 17px;
             font-weight: 300;
             font-style: italic;
             white-space: nowrap;
@@ -115,13 +148,14 @@
         }
 
         .section-desc {
-            font-size: 12px;
-            margin-bottom: 12px;
+            font-size: 13px;
+            margin-bottom: 10px;
+            color: var(--muted);
         }
 
         /* Footer & QR Code Area */
         footer {
-            margin-top: 24px;
+            margin-top: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -130,10 +164,11 @@
 
         /* Footer Text: Thin & Cursive */
         .footer-text {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 300;
             font-style: italic;
             line-height: 1.5;
+            color: var(--muted);
         }
 
         .qr-box {
@@ -150,8 +185,8 @@
         }
 
         .qr-code {
-            width: 108px;
-            height: 108px;
+            width: 96px;
+            height: 96px;
         }
 
         .qr-label {
@@ -162,6 +197,7 @@
             margin-top: 4px;
             max-width: 130px;
             line-height: 1.4;
+            color: var(--muted);
         }
 
         /* Error state formatting */
@@ -196,12 +232,12 @@
 
             body {
                 padding: 0;
-                background: #ffffff;
+                background: var(--bg);
             }
 
             .card {
                 max-width: 100%;
-                border: 2px solid #000000;
+                border: 2px solid var(--line);
                 padding: 30px;
                 page-break-inside: avoid;
             }
@@ -213,8 +249,9 @@
     <div class="card">
         <!-- HEADER -->
         <header>
+            <img class="wolf" src="assets/wolf-web.png" alt="Wolf">
             <h1>eastend</h1>
-            <div class="subtitle">GETRÄNKEKARTE</div>
+            <div class="subtitle">DRINK MENU</div>
         </header>
 
         <!-- DYNAMIC MENU SECTIONS (Populated via fetch from menu.json) -->
@@ -223,9 +260,9 @@
         <!-- FOOTER & QR CODE -->
         <footer>
             <div class="footer-text">
-                Nur Barzahlung<br>
-                Bitte Flaschen und Gläser zurückbringen<br>
-                Keine Getränke mehr ab 0:45
+                Cash only<br>
+                Please bring back bottles and glasses<br>
+                No more drinks after 0:45
             </div>
 
             <div class="qr-box">
@@ -668,7 +705,7 @@
 		</g>
 	</g>
                 </svg>
-                <span class="qr-label">Vollst&auml;ndige Getr&auml;nkekarte mit allen Details und Specials</span>
+                <span class="qr-label">Complete drink menu with all details and specials</span>
             </div>
         </footer>
     </div>
@@ -707,6 +744,7 @@
                                 <span class="item-name">${item.name}</span>
                                 ${item.sub ? `<span class="item-sub">${item.sub}</span>` : ''}
                             </div>
+                            <span class="item-dots"></span>
                             <span class="item-price">${item.price}</span>
                         </div>
                     `;
@@ -730,7 +768,7 @@
                 console.error('Failed to load menu.json:', error);
                 document.getElementById('menu-container').innerHTML = `
                     <div class="error-message">
-                        Getränkekarte konnte nicht geladen werden. Bitte prüfen Sie, ob "menu.json" im selben Ordner liegt.
+                        Could not load the drink menu. Please check that "menu.json" is in the same folder.
                     </div>
                 `;
             }

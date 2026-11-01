@@ -4,8 +4,8 @@ Screenshot script for the eastend drink menu.
 
 Captures the menu pages with headless Chrome as PNG (all full-bleed,
 no grey border):
-  - menu-landscape.png   tight landscape (~200 dpi) -> horizontal card, for print
-  - menu-a4-portrait.png A4 portrait, ~200 dpi      -> vertical card, for print
+  - menu-landscape.{jpg,png}   tight landscape (~200 dpi) -> horizontal card, for print
+  - menu-a4-portrait.{jpg,png} A4 portrait, ~200 dpi      -> vertical card, for print
 
 The landscape height is measured from the page itself, so the card is
 only as tall as its content (no A4-style dead space).
@@ -81,6 +81,9 @@ def measure_card_height(chrome: str, url: str, width: int) -> int:
 
 
 def shoot(chrome: str, url: str, width: int, height: int, scale: int, out: str) -> None:
+    # Chrome's built-in JPEG encoder is fixed at low quality, so capture a
+    # lossless PNG (kept as-is) and re-encode a high-quality JPEG.
+    png = os.path.splitext(out)[0] + ".png"
     cmd = [
         chrome,
         "--headless",
@@ -89,14 +92,20 @@ def shoot(chrome: str, url: str, width: int, height: int, scale: int, out: str) 
         "--hide-scrollbars",
         f"--window-size={width},{height}",
         f"--force-device-scale-factor={scale}",
-        f"--screenshot={out}",
+        f"--screenshot={png}",
         "--virtual-time-budget=3000",  # wait for fetch + render to finish
         url,
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
-    if not os.path.exists(out):
+    if not os.path.exists(png):
         sys.exit(f"error: screenshot failed:\n{result.stderr.strip()}")
-    print(f"  {out}  ({width * scale}x{height * scale} px)")
+
+    from PIL import Image
+
+    with Image.open(png) as im:
+        im.convert("RGB").save(out, "JPEG", quality=95, subsampling=0, optimize=True)
+    print(f"  {png}  ({width * scale}x{height * scale} px, lossless)")
+    print(f"  {out}  ({width * scale}x{height * scale} px, q95)")
 
 
 def main() -> None:
@@ -124,11 +133,11 @@ def main() -> None:
     # Tight landscape: measure the actual content height, 2x scale => ~200 dpi
     height = measure_card_height(chrome, h_page, LANDSCAPE_WIDTH)
     shoot(chrome, h_page, LANDSCAPE_WIDTH, height, 2,
-          os.path.join(args.output_dir, "menu-landscape.png"))
+          os.path.join(args.output_dir, "menu-landscape.jpg"))
 
     # A4 portrait: 794x1123 CSS px at 96 dpi; 2x scale => 1588x2246 px (~200 dpi)
     shoot(chrome, v_page, 794, 1123, 2,
-          os.path.join(args.output_dir, "menu-a4-portrait.png"))
+          os.path.join(args.output_dir, "menu-a4-portrait.jpg"))
 
 
 if __name__ == "__main__":
