@@ -19,6 +19,11 @@
       },
       { "name": "Spezi", "sub": "with/without sugar", "price": "1,00 €" },
       {
+        "name": "Cola · Fanta · Sprite",
+        "sub": "with/without sugar",
+        "price": "1,00 €"
+      },
+      {
         "name": "Bionade",
         "sub": "Blutorange, Litschi",
         "price": "1,50 €"
